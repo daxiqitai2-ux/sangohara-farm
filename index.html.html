@@ -1,0 +1,578 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Kaku Gothic ProN','メイリオ',sans-serif;background:var(--color-background-tertiary);color:var(--color-text-primary);min-height:100vh;font-size:14px}
+.app{max-width:960px;margin:0 auto;padding:12px}
+.hdr{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 18px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.hdr-logo{width:40px;height:40px;background:#27500A;border-radius:var(--border-radius-md);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.hdr-info h1{font-size:17px;font-weight:500}
+.hdr-info p{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.tab{padding:7px 14px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);font-size:13px;cursor:pointer;color:var(--color-text-secondary);font-family:inherit;transition:all 0.12s}
+.tab.active{background:#27500A;color:#EAF3DE;border-color:#27500A;font-weight:500}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:18px;margin-bottom:12px}
+.card-title{font-size:14px;font-weight:500;margin-bottom:14px;display:flex;align-items:center;gap:7px}
+/* Stamp */
+.stamp-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stamp-col{}
+.stamp-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.sbtn{padding:18px 8px;border-radius:var(--border-radius-md);border:1px solid;cursor:pointer;text-align:center;font-family:inherit;transition:all 0.12s;font-size:13px;font-weight:500}
+.sbtn:hover{opacity:0.85;transform:scale(0.98)}
+.sbtn-in{background:#EAF3DE;border-color:#639922;color:#27500A}
+.sbtn-out{background:#FCEBEB;border-color:#E24B4A;color:#791F1F}
+.sbtn-brk{background:#FAEEDA;border-color:#EF9F27;color:#633806}
+.sbtn-bck{background:#E6F1FB;border-color:#378ADD;color:#0C447C}
+.sbtn .s-icon{font-size:22px;display:block;margin-bottom:4px}
+.name-section label{font-size:12px;color:var(--color-text-secondary);display:block;margin-bottom:6px}
+.name-input-wrap{display:flex;gap:6px;margin-bottom:8px}
+.name-input-wrap input{flex:1;padding:8px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:14px;font-family:inherit;background:var(--color-background-secondary);color:var(--color-text-primary)}
+.name-input-wrap input:focus{outline:none;border-color:#27500A}
+.name-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.chip{padding:4px 10px;border-radius:20px;border:0.5px solid var(--color-border-secondary);font-size:12px;cursor:pointer;background:var(--color-background-secondary);transition:all 0.1s}
+.chip:hover,.chip.sel{background:#27500A;color:#EAF3DE;border-color:#27500A}
+.qr-col{display:flex;flex-direction:column;align-items:center;justify-content:center;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:16px;background:var(--color-background-secondary)}
+.qr-col p{font-size:12px;color:var(--color-text-secondary);margin-bottom:10px;text-align:center}
+#qr-container{background:#fff;padding:8px;border-radius:var(--border-radius-md)}
+.qr-hint{font-size:11px;color:var(--color-text-secondary);margin-top:8px;text-align:center;line-height:1.5}
+/* status badge */
+.status-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:500}
+.st-in{background:#EAF3DE;color:#27500A}
+.st-out{background:#FCEBEB;color:#791F1F}
+.st-brk{background:#FAEEDA;color:#633806}
+.st-bck{background:#E6F1FB;color:#0C447C}
+/* table */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:left;padding:7px 10px;border-bottom:1px solid var(--color-border-tertiary);color:var(--color-text-secondary);font-weight:500;background:var(--color-background-secondary);white-space:nowrap}
+.tbl td{padding:7px 10px;border-bottom:0.5px solid var(--color-border-tertiary);white-space:nowrap}
+.tbl tr:hover td{background:var(--color-background-secondary)}
+.tbl-wrap{overflow-x:auto}
+/* stats */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:14px}
+.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px;text-align:center}
+.stat-n{font-size:22px;font-weight:500}
+.stat-l{font-size:11px;color:var(--color-text-secondary);margin-top:3px}
+/* leave */
+.leave-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.leave-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:14px}
+.leave-card h3{font-size:13px;font-weight:500;margin-bottom:10px;padding-bottom:8px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.lrow{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:13px}
+.lnum{font-size:17px;font-weight:500;color:#27500A}
+.lnum.blue{color:#185FA5}
+.adj-row{display:flex;gap:5px;margin-top:8px}
+.adj-row input{width:60px;padding:5px 7px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:12px;background:var(--color-background-secondary);color:var(--color-text-primary);font-family:inherit}
+.adj-row input:focus{outline:none;border-color:#27500A}
+.adj-btn{padding:5px 8px;border:none;border-radius:var(--border-radius-md);font-size:12px;cursor:pointer;font-family:inherit;font-weight:500}
+.adj-g{background:#EAF3DE;color:#27500A}
+.adj-r{background:#FCEBEB;color:#791F1F}
+/* filter */
+.frow{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.frow select,.frow input{padding:6px 9px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:13px;background:var(--color-background-secondary);color:var(--color-text-primary);font-family:inherit}
+.frow select:focus,.frow input:focus{outline:none;border-color:#27500A}
+.btn{padding:7px 14px;border-radius:var(--border-radius-md);border:none;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500;transition:all 0.12s}
+.btn-g{background:#27500A;color:#EAF3DE}
+.btn-g:hover{background:#173404}
+.btn-s{background:var(--color-background-secondary);color:var(--color-text-primary);border:0.5px solid var(--color-border-secondary)}
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--color-background-primary);border-radius:var(--border-radius-lg);padding:22px;width:100%;max-width:340px;border:0.5px solid var(--color-border-secondary)}
+.modal h2{font-size:16px;font-weight:500;margin-bottom:3px}
+.modal .msub{font-size:12px;color:var(--color-text-secondary);margin-bottom:16px}
+.modal input{width:100%;padding:9px 11px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:15px;font-family:inherit;background:var(--color-background-secondary);color:var(--color-text-primary);margin-bottom:10px}
+.modal input:focus{outline:none;border-color:#27500A}
+.btn-full{width:100%;margin-bottom:7px}
+.loading{text-align:center;padding:24px;color:var(--color-text-secondary);font-size:13px}
+.empty{text-align:center;padding:28px;color:var(--color-text-secondary);font-size:13px}
+.toast{position:fixed;top:16px;right:16px;padding:10px 16px;border-radius:var(--border-radius-md);font-size:13px;z-index:200;animation:tin 0.25s ease;font-weight:500}
+.toast-ok{background:#27500A;color:#EAF3DE}
+.toast-err{background:#A32D2D;color:#FCEBEB}
+@keyframes tin{from{transform:translateX(80px);opacity:0}to{transform:translateX(0);opacity:1}}
+.sync-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px}
+.dot-ok{background:#639922}
+.dot-err{background:#E24B4A}
+.dot-load{background:#EF9F27;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.add-staff-row{display:flex;gap:6px;margin-bottom:10px}
+.add-staff-row input{flex:1;padding:7px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:13px;background:var(--color-background-secondary);color:var(--color-text-primary);font-family:inherit}
+.add-staff-row input:focus{outline:none;border-color:#27500A}
+</style>
+
+<div class="app" id="root">
+  <div class="loading">読み込み中...</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const API = 'https://api.anthropic.com/v1/messages';
+const MODEL = 'claude-sonnet-4-20250514';
+
+let state = {
+  tab: 'stamp',
+  records: [],
+  staffList: [],
+  leaveData: {},
+  selectedName: '',
+  modal: null,
+  syncing: false,
+  syncOk: null,
+  filterName: '',
+  filterMonth: '',
+  loading: false
+};
+
+// ── Storage helpers (server via Claude API as key-value store) ──────────────
+async function apiCall(prompt, system='') {
+  const res = await fetch(API, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      model: MODEL,
+      max_tokens: 4096,
+      system: system || 'You are a data storage assistant. Return only valid JSON, no markdown, no explanation.',
+      messages:[{role:'user',content: prompt}]
+    })
+  });
+  const data = await res.json();
+  const text = (data.content||[]).map(c=>c.text||'').join('');
+  return text;
+}
+
+// We use Artifact persistent storage
+async function loadAll() {
+  try {
+    const r = await window.storage.get('farm_data');
+    if (r) {
+      const d = JSON.parse(r.value);
+      state.records = d.records || [];
+      state.staffList = d.staffList || [];
+      state.leaveData = d.leaveData || {};
+    }
+  } catch(e) { /* first time */ }
+}
+
+async function saveAll() {
+  state.syncing = true; render();
+  try {
+    await window.storage.set('farm_data', JSON.stringify({
+      records: state.records,
+      staffList: state.staffList,
+      leaveData: state.leaveData
+    }));
+    state.syncOk = true;
+  } catch(e) {
+    state.syncOk = false;
+  }
+  state.syncing = false;
+  render();
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+function now() { return new Date(); }
+function fmtDate(d) { return d.toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'}); }
+function fmtTime(d) { return d.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
+function todayStr() { return fmtDate(new Date()); }
+function ymStr(d) { const dt=d||new Date(); return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`; }
+
+function calcDailyHours(recs) {
+  const sorted = recs.slice().sort((a,b)=>a.ts.localeCompare(b.ts));
+  let total=0, inT=null, brkT=null;
+  for(const r of sorted){
+    if(r.type==='出勤') inT=new Date(r.ts);
+    else if(r.type==='退勤'&&inT){ total+=(new Date(r.ts)-inT)/3600000; inT=null; }
+    else if(r.type==='中抜け') brkT=new Date(r.ts);
+    else if(r.type==='戻り'&&brkT){ brkT=null; }
+  }
+  return Math.round(total*100)/100;
+}
+
+function getMonthlyHours(name, ym) {
+  const recs = state.records.filter(r=>r.name===name && r.ts.startsWith(ym));
+  const byDay={};
+  recs.forEach(r=>{ const d=r.ts.slice(0,10); if(!byDay[d])byDay[d]=[]; byDay[d].push(r); });
+  let t=0; Object.values(byDay).forEach(dr=>{ t+=calcDailyHours(dr); });
+  return Math.round(t*100)/100;
+}
+
+function getTodayLastType(name) {
+  const today = todayStr();
+  const recs = state.records.filter(r=>r.name===name && fmtDate(new Date(r.ts))===today);
+  if(!recs.length) return null;
+  return recs.slice().sort((a,b)=>b.ts.localeCompare(a.ts))[0].type;
+}
+
+function getYearMonths() {
+  const m=[];
+  for(let i=0;i<12;i++){
+    const d=new Date(now().getFullYear(),now().getMonth()-i,1);
+    m.push(ymStr(d));
+  }
+  return m;
+}
+
+function showToast(msg, err=false) {
+  document.querySelectorAll('.toast').forEach(e=>e.remove());
+  const el=document.createElement('div');
+  el.className=`toast ${err?'toast-err':'toast-ok'}`;
+  el.textContent=msg;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),2500);
+}
+
+// ── Actions ──────────────────────────────────────────────────────────────────
+async function doStamp(type) {
+  const name = state.selectedName.trim();
+  if(!name){ showToast('名前を入力または選択してください',true); return; }
+  const ts = new Date().toISOString().slice(0,19).replace('T',' ');
+  state.records.unshift({id:Date.now(),name,type,ts});
+  if(!state.staffList.includes(name)) state.staffList.push(name);
+  showToast(`${name}さんの${type}を記録しました`);
+  await saveAll();
+  render();
+}
+
+async function addLeave(name,type,delta) {
+  if(!state.leaveData[name]) state.leaveData[name]={paid:0,holiday:0,paidTotal:10,holidayTotal:12};
+  const key=type==='paid'?'paid':'holiday';
+  state.leaveData[name][key]=Math.max(0,(state.leaveData[name][key]||0)+delta);
+  await saveAll();
+  render();
+}
+
+async function setLeaveTotal(name,field,val) {
+  if(!state.leaveData[name]) state.leaveData[name]={paid:0,holiday:0,paidTotal:10,holidayTotal:12};
+  state.leaveData[name][field]=Math.max(0,val);
+  await saveAll();
+  render();
+}
+
+async function deleteRecord(id) {
+  state.records=state.records.filter(r=>r.id!==id);
+  await saveAll();
+  render();
+}
+
+async function addStaff(name) {
+  if(!name||!name.trim()){ showToast('名前を入力してください',true); return; }
+  name=name.trim();
+  if(state.staffList.includes(name)){ showToast('すでに登録済みです',true); return; }
+  state.staffList.push(name);
+  await saveAll();
+  showToast(`${name}さんを追加しました`);
+  render();
+}
+
+async function removeStaff(name) {
+  state.staffList=state.staffList.filter(n=>n!==name);
+  await saveAll();
+  render();
+}
+
+// ── Export ────────────────────────────────────────────────────────────────────
+function exportExcel() {
+  const ym = state.filterMonth || ymStr();
+  const [y,m] = ym.split('-');
+  const names = state.filterName ? [state.filterName] : state.staffList;
+  const wb = XLSX.utils.book_new();
+
+  names.forEach(name=>{
+    const recs=state.records.filter(r=>r.name===name&&r.ts.startsWith(ym));
+    const byDay={};
+    recs.forEach(r=>{ const d=r.ts.slice(0,10); if(!byDay[d])byDay[d]=[]; byDay[d].push(r); });
+    const rows=[['日付','出勤','退勤','中抜け','戻り','労働時間(h)']];
+    const days=new Date(parseInt(y),parseInt(m),0).getDate();
+    for(let i=1;i<=days;i++){
+      const ds=`${ym}-${String(i).padStart(2,'0')}`;
+      const dr=(byDay[ds]||[]).sort((a,b)=>a.ts.localeCompare(b.ts));
+      const get=t=>dr.filter(r=>r.type===t).map(r=>r.ts.slice(11,16)).join('/');
+      rows.push([ds,get('出勤'),get('退勤'),get('中抜け'),get('戻り'),dr.length?calcDailyHours(dr):'']);
+    }
+    rows.push(['','','','','月合計',getMonthlyHours(name,ym)]);
+    rows.push([]);
+    const lv=state.leaveData[name]||{paid:0,holiday:0,paidTotal:10,holidayTotal:12};
+    rows.push(['有給取得',lv.paid||0,'日','付与',lv.paidTotal||10,'日','残',((lv.paidTotal||10)-(lv.paid||0)),'日']);
+    rows.push(['公休取得',lv.holiday||0,'日','付与',lv.holidayTotal||12,'日','残',((lv.holidayTotal||12)-(lv.holiday||0)),'日']);
+    const ws=XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols']=[{wch:12},{wch:8},{wch:8},{wch:8},{wch:8},{wch:12}];
+    XLSX.utils.book_append_sheet(wb,ws,name.slice(0,31));
+  });
+  XLSX.writeFile(wb,`三郷原牧場_勤怠_${ym}.xlsx`);
+  showToast('Excelを出力しました');
+}
+
+// ── QR ───────────────────────────────────────────────────────────────────────
+function buildQR() {
+  setTimeout(()=>{
+    const el=document.getElementById('qr-box');
+    if(!el) return;
+    el.innerHTML='';
+    const url = window.location.href.split('?')[0];
+    try {
+      new QRCode(el,{text:url,width:130,height:130,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.M});
+    } catch(e){ el.innerHTML='<span style="font-size:11px">QR生成エラー</span>'; }
+  },80);
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
+function renderStamp() {
+  const types=[
+    {type:'出勤',cls:'sbtn-in',icon:'🟢'},
+    {type:'退勤',cls:'sbtn-out',icon:'🔴'},
+    {type:'中抜け',cls:'sbtn-brk',icon:'🟡'},
+    {type:'戻り',cls:'sbtn-bck',icon:'🔵'}
+  ];
+  const lastType = state.selectedName ? getTodayLastType(state.selectedName) : null;
+  const statusMap={'出勤':'st-in','退勤':'st-out','中抜け':'st-brk','戻り':'st-bck'};
+
+  return `
+<div class="card">
+  <div class="card-title">⏰ 打刻</div>
+  <div class="stamp-wrap">
+    <div class="stamp-col">
+      <div class="name-section">
+        <label>スタッフ名</label>
+        <div class="name-input-wrap">
+          <input type="text" id="name-input" placeholder="名前を入力" value="${state.selectedName}"
+            oninput="state.selectedName=this.value;renderNameChips()"
+            onkeydown="if(event.key==='Enter'){}">
+        </div>
+        <div class="name-chips" id="name-chips">
+          ${state.staffList.map(n=>`<span class="chip${n===state.selectedName?' sel':''}" onclick="selectName('${n}')">${n}</span>`).join('')}
+        </div>
+        ${state.selectedName&&lastType?`<div style="margin-bottom:10px"><span class="status-tag ${statusMap[lastType]||''}">${lastType}</span> <span style="font-size:12px;color:var(--color-text-secondary)">本日の最終打刻</span></div>`:''}
+      </div>
+      <div class="stamp-btns">
+        ${types.map(t=>`<button class="sbtn ${t.cls}" onclick="doStamp('${t.type}')"><span class="s-icon">${t.icon}</span>${t.type}</button>`).join('')}
+      </div>
+    </div>
+    <div class="qr-col">
+      <p>📱 QRコードをスキャン<br>このページを開けます</p>
+      <div id="qr-box" style="background:#fff;padding:6px;border-radius:6px"></div>
+      <div class="qr-hint">現場に印刷して貼り付けると<br>スマホで直接打刻できます</div>
+    </div>
+  </div>
+</div>`;
+}
+
+function renderNameChips() {
+  const el=document.getElementById('name-chips');
+  if(el) el.innerHTML=state.staffList.map(n=>`<span class="chip${n===state.selectedName?' sel':''}" onclick="selectName('${n}')">${n}</span>`).join('');
+}
+
+function selectName(n) {
+  state.selectedName=n;
+  const inp=document.getElementById('name-input');
+  if(inp) inp.value=n;
+  renderNameChips();
+}
+
+function renderRecords() {
+  const months=getYearMonths();
+  let recs=state.records.slice();
+  if(state.filterName) recs=recs.filter(r=>r.name===state.filterName);
+  if(state.filterMonth) recs=recs.filter(r=>r.ts.startsWith(state.filterMonth));
+  
+  const allNames=[...new Set(state.records.map(r=>r.name))];
+  const curYm=state.filterMonth||ymStr();
+  
+  // daily summary for selected name/month
+  let dayRows='';
+  if(state.filterName) {
+    const nameRecs=state.records.filter(r=>r.name===state.filterName&&r.ts.startsWith(curYm));
+    const byDay={};
+    nameRecs.forEach(r=>{ const d=r.ts.slice(0,10); if(!byDay[d])byDay[d]=[]; byDay[d].push(r); });
+    const [y,m]=curYm.split('-');
+    const daysInM=new Date(parseInt(y),parseInt(m),0).getDate();
+    let rows='';
+    for(let i=1;i<=daysInM;i++){
+      const ds=`${curYm}-${String(i).padStart(2,'0')}`;
+      const dr=(byDay[ds]||[]).sort((a,b)=>a.ts.localeCompare(b.ts));
+      if(!dr.length) continue;
+      const get=t=>dr.filter(r=>r.type===t).map(r=>r.ts.slice(11,16)).join(' / ');
+      const h=calcDailyHours(dr);
+      rows+=`<tr><td>${ds}</td><td>${get('出勤')}</td><td>${get('退勤')}</td><td>${get('中抜け')}</td><td>${get('戻り')}</td><td>${h}h</td></tr>`;
+    }
+    const mh=getMonthlyHours(state.filterName,curYm);
+    dayRows=`
+<div class="card">
+  <div class="card-title">📅 ${state.filterName}さん ${curYm} 日別集計</div>
+  <div class="stats-grid">
+    <div class="stat"><div class="stat-n">${mh}h</div><div class="stat-l">月間合計</div></div>
+    ${months.slice(0,3).filter((_,i)=>i>0).map(ym=>`<div class="stat"><div class="stat-n">${getMonthlyHours(state.filterName,ym)}h</div><div class="stat-l">${ym.slice(5)}月</div></div>`).join('')}
+  </div>
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>日付</th><th>出勤</th><th>退勤</th><th>中抜け</th><th>戻り</th><th>時間</th></tr></thead>
+    <tbody>${rows||`<tr><td colspan="6" style="text-align:center;padding:16px;color:var(--color-text-secondary)">記録なし</td></tr>`}</tbody>
+    <tfoot><tr><td colspan="5" style="text-align:right;padding:7px 10px;font-weight:500">月合計</td><td style="padding:7px 10px;font-weight:500;color:#27500A">${mh}h</td></tr></tfoot>
+  </table></div>
+</div>`;
+  }
+
+  return `
+${dayRows}
+<div class="card">
+  <div class="card-title">📋 打刻ログ</div>
+  <div class="frow">
+    <select onchange="state.filterName=this.value;render()">
+      <option value="">全員</option>
+      ${allNames.map(n=>`<option value="${n}"${n===state.filterName?' selected':''}>${n}</option>`).join('')}
+    </select>
+    <select onchange="state.filterMonth=this.value;render()">
+      <option value="">全期間</option>
+      ${months.map(m=>`<option value="${m}"${m===state.filterMonth?' selected':''}>${m}</option>`).join('')}
+    </select>
+    <button class="btn btn-g" onclick="exportExcel()" style="margin-left:auto">📥 Excel出力</button>
+  </div>
+  ${recs.length===0?`<div class="empty">記録がありません</div>`:`
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>日時</th><th>名前</th><th>種別</th><th></th></tr></thead>
+    <tbody>
+    ${recs.slice(0,100).map(r=>{
+      const map={'出勤':'st-in','退勤':'st-out','中抜け':'st-brk','戻り':'st-bck'};
+      return`<tr><td>${r.ts}</td><td>${r.name}</td><td><span class="status-tag ${map[r.type]||''}">${r.type}</span></td><td><button class="btn btn-s" style="padding:3px 8px;font-size:11px" onclick="deleteRecord(${r.id})">削除</button></td></tr>`;
+    }).join('')}
+    </tbody>
+  </table></div>
+  ${recs.length>100?`<p style="font-size:11px;color:var(--color-text-secondary);margin-top:6px;text-align:center">最新100件表示（全${recs.length}件）</p>`:''}
+  `}
+</div>`;
+}
+
+function renderLeave() {
+  return `
+<div class="card">
+  <div class="card-title">🌿 有給・公休管理（年間）</div>
+  ${state.staffList.length===0?`<div class="empty">スタッフを登録してください</div>`:`
+  <div class="leave-grid">
+    ${state.staffList.map(name=>{
+      const lv=state.leaveData[name]||{paid:0,holiday:0,paidTotal:10,holidayTotal:12};
+      const pu=lv.paid||0, hu=lv.holiday||0, pt=lv.paidTotal||10, ht=lv.holidayTotal||12;
+      return`
+      <div class="leave-card">
+        <h3>👤 ${name}</h3>
+        <div class="lrow"><span>有給 取得</span><span class="lnum">${pu}日</span></div>
+        <div class="lrow"><span>有給 残</span><span class="lnum blue">${pt-pu}日 / ${pt}日</span></div>
+        <div class="lrow"><span>公休 取得</span><span class="lnum" style="color:#BA7517">${hu}日</span></div>
+        <div class="lrow"><span>公休 残</span><span class="lnum blue">${ht-hu}日 / ${ht}日</span></div>
+        <div style="margin-top:10px;font-size:11px;color:var(--color-text-secondary);margin-bottom:4px">有給 ±</div>
+        <div class="adj-row">
+          <input type="number" min="1" value="1" id="p_${name}">
+          <button class="adj-btn adj-g" onclick="adjLeave('${name}','paid',1)">＋</button>
+          <button class="adj-btn adj-r" onclick="adjLeave('${name}','paid',-1)">－</button>
+        </div>
+        <div style="margin-top:7px;font-size:11px;color:var(--color-text-secondary);margin-bottom:4px">公休 ±</div>
+        <div class="adj-row">
+          <input type="number" min="1" value="1" id="h_${name}">
+          <button class="adj-btn adj-g" onclick="adjLeave('${name}','holiday',1)">＋</button>
+          <button class="adj-btn adj-r" onclick="adjLeave('${name}','holiday',-1)">－</button>
+        </div>
+        <div style="margin-top:9px;font-size:11px;color:var(--color-text-secondary);margin-bottom:4px">付与日数変更</div>
+        <div class="adj-row">
+          <input type="number" min="0" value="${pt}" id="pt_${name}" style="width:55px">
+          <button class="adj-btn adj-g" onclick="setTotalFromInput('${name}','paidTotal','pt_${name}')">有給設定</button>
+        </div>
+        <div class="adj-row" style="margin-top:5px">
+          <input type="number" min="0" value="${ht}" id="ht_${name}" style="width:55px">
+          <button class="adj-btn adj-g" onclick="setTotalFromInput('${name}','holidayTotal','ht_${name}')">公休設定</button>
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`}
+</div>`;
+}
+
+function renderStaff() {
+  return `
+<div class="card">
+  <div class="card-title">👥 スタッフ管理</div>
+  <div class="add-staff-row">
+    <input type="text" id="new-staff" placeholder="スタッフ名を入力" onkeydown="if(event.key==='Enter')addStaffFromInput()">
+    <button class="btn btn-g" onclick="addStaffFromInput()">＋ 追加</button>
+  </div>
+  ${state.staffList.length===0?`<div class="empty">スタッフが登録されていません</div>`:`
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>名前</th><th>今月の労働時間</th><th>本日の状態</th><th></th></tr></thead>
+    <tbody>
+    ${state.staffList.map(name=>{
+      const mh=getMonthlyHours(name,ymStr());
+      const lt=getTodayLastType(name);
+      const map={'出勤':'st-in','退勤':'st-out','中抜け':'st-brk','戻り':'st-bck'};
+      return`<tr>
+        <td style="font-weight:500">${name}</td>
+        <td>${mh}h</td>
+        <td>${lt?`<span class="status-tag ${map[lt]}">${lt}</span>`:'<span style="color:var(--color-text-secondary);font-size:12px">未打刻</span>'}</td>
+        <td><button class="btn btn-s" style="padding:3px 8px;font-size:11px;color:#A32D2D" onclick="removeStaff('${name}')">削除</button></td>
+      </tr>`;
+    }).join('')}
+    </tbody>
+  </table></div>`}
+</div>`;
+}
+
+function adjLeave(name,type,dir) {
+  const id=type==='paid'?`p_${name}`:`h_${name}`;
+  const v=parseInt(document.getElementById(id)?.value||'1')||1;
+  addLeave(name,type,dir*v);
+}
+
+function setTotalFromInput(name,field,inputId) {
+  const v=parseInt(document.getElementById(inputId)?.value);
+  if(isNaN(v)||v<0){showToast('正しい値を入力してください',true);return;}
+  setLeaveTotal(name,field,v);
+}
+
+function addStaffFromInput() {
+  const inp=document.getElementById('new-staff');
+  if(inp) addStaff(inp.value);
+}
+
+function render() {
+  const tabs=[
+    {id:'stamp',label:'⏰ 打刻'},
+    {id:'records',label:'📋 記録'},
+    {id:'leave',label:'🌿 有給・公休'},
+    {id:'staff',label:'👥 スタッフ'}
+  ];
+  const todayRecs=state.records.filter(r=>fmtDate(new Date(r.ts))===todayStr());
+  const todayNames=[...new Set(todayRecs.map(r=>r.name))];
+  const syncIcon=state.syncing
+    ?`<span class="sync-dot dot-load"></span>同期中`
+    :state.syncOk===false
+    ?`<span class="sync-dot dot-err"></span>保存失敗`
+    :`<span class="sync-dot dot-ok"></span>保存済`;
+
+  const contentMap={stamp:renderStamp,records:renderRecords,leave:renderLeave,staff:renderStaff};
+  const content=(contentMap[state.tab]||renderStamp)();
+
+  document.getElementById('root').innerHTML=`
+<div class="hdr">
+  <div class="hdr-logo">🐄</div>
+  <div class="hdr-info" style="flex:1">
+    <h1>三郷原牧場 勤怠管理</h1>
+    <p id="clock">${fmtDate(now())} ${fmtTime(now())} &nbsp;|&nbsp; 本日出勤：${todayNames.length}名 &nbsp;|&nbsp; ${syncIcon}</p>
+  </div>
+</div>
+<div class="tabs">
+  ${tabs.map(t=>`<button class="tab${state.tab===t.id?' active':''}" onclick="state.tab='${t.id}';render()">${t.label}</button>`).join('')}
+</div>
+${content}`;
+
+  if(state.tab==='stamp') buildQR();
+
+  clearInterval(window._clk);
+  window._clk=setInterval(()=>{
+    const el=document.getElementById('clock');
+    if(el){
+      const tr=state.records.filter(r=>fmtDate(new Date(r.ts))===todayStr());
+      const tn=[...new Set(tr.map(r=>r.name))];
+      const si=state.syncing?`<span class="sync-dot dot-load"></span>同期中`:state.syncOk===false?`<span class="sync-dot dot-err"></span>保存失敗`:`<span class="sync-dot dot-ok"></span>保存済`;
+      el.innerHTML=`${fmtDate(now())} ${fmtTime(now())} &nbsp;|&nbsp; 本日出勤：${tn.length}名 &nbsp;|&nbsp; ${si}`;
+    }
+  },1000);
+}
+
+// init
+(async()=>{
+  await loadAll();
+  render();
+})();
+</script>
